@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ゲーム選択</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <button id="menu-btn">≡ メニュー</button>
+        <div id="user-info">
+            <span id="nickname"></span>さん　
+            💰<span id="chips"></span>チップ
+        </div>
+    </header>
+
+    <main>
+        <section id="ranking">
+            <h2>🏆 チップランキング 🏆</h2>
+            <ol id="ranking-list">
+                <!-- ランキングがここに表示される -->
+            </ol>
+        </section>
+
+        <section id="game-select">
+            <h2>ゲームを選ぼう！</h2>
+            <a href="blackjack.html" class="btn">ブラックジャック</a>
+        </section>
+    </main>
+
+    <script src="js/game-select.js"></script>
+</body>
+</html>

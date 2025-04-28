@@ -29,3 +29,35 @@ if (signupForm) {
         window.location.href = 'login.html';
     });
 }
+// ログインフォーム
+const loginForm = document.getElementById('login-form');
+
+if (loginForm) {
+    loginForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const id = document.getElementById('login-id').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        // ユーザーデータ取得
+        const userDataJson = localStorage.getItem('user_' + id);
+
+        if (!userDataJson) {
+            alert('IDが存在しません');
+            return;
+        }
+
+        const userData = JSON.parse(userDataJson);
+
+        if (userData.password !== password) {
+            alert('パスワードが違います');
+            return;
+        }
+
+        // ログイン成功！セッション用に保存
+        localStorage.setItem('currentUser', id);
+
+        alert('ログイン成功！');
+        window.location.href = 'select-game.html';
+    });
+}

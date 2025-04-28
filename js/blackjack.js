@@ -99,3 +99,5 @@ document.getElementById('menu-btn').addEventListener('click', function() {
 
 // 最初スタート
 startGame();
+<script src="js/menu.js"></script>
+

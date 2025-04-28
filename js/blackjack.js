@@ -5,27 +5,61 @@ if (!currentUserId) {
     window.location.href = 'login.html';
 }
 
-// ユーザー情報取得
 const userData = JSON.parse(localStorage.getItem('user_' + currentUserId));
 document.getElementById('nickname').textContent = userData.nickname;
 document.getElementById('chips').textContent = userData.chips;
 
-// ゲームロジック
 let dealerCards = [];
 let playerCards = [];
+let currentBet = 0;
+
+// カードデータ（スートと番号）
+const suits = ['hearts', 'diamonds', 'clubs', 'spades'];
+const numbers = [2, 3, 4, 5, 6, 7, 8, 9, 10, 'J', 'Q', 'K', 'A'];
 
 function getRandomCard() {
-    const card = Math.floor(Math.random() * 11) + 1; // 1〜11
-    return card;
+    const suit = suits[Math.floor(Math.random() * suits.length)];
+    const number = numbers[Math.floor(Math.random() * numbers.length)];
+    return { suit, number };
 }
 
-function updateHands() {
-    document.getElementById('dealer-cards').textContent = dealerCards.join(' , ');
-    document.getElementById('player-cards').textContent = playerCards.join(' , ');
+function cardValue(card) {
+    if (card.number === 'J' || card.number === 'Q' || card.number === 'K') {
+        return 10;
+    } else if (card.number === 'A') {
+        return 11; // Aは最初11で数える
+    } else {
+        return card.number;
+    }
+}
+
+function displayCards(cards, elementId) {
+    const area = document.getElementById(elementId);
+    area.innerHTML = '';
+    cards.forEach(card => {
+        const img = document.createElement('img');
+        img.src = `cards/${card.suit}_${card.number}.png`;
+        img.alt = `${card.number} of ${card.suit}`;
+        img.className = 'card';
+        area.appendChild(img);
+    });
 }
 
 function calculateTotal(cards) {
-    return cards.reduce((a, b) => a + b, 0);
+    let total = 0;
+    let aces = 0;
+    cards.forEach(card => {
+        total += cardValue(card);
+        if (card.number === 'A') aces++;
+    });
+
+    // Aを1に変えてバースト防止
+    while (total > 21 && aces > 0) {
+        total -= 10;
+        aces--;
+    }
+
+    return total;
 }
 
 function startGame() {
@@ -36,32 +70,60 @@ function startGame() {
     document.getElementById('restart-btn').style.display = 'none';
 }
 
+function updateHands() {
+    displayCards(dealerCards, 'dealer-cards');
+    displayCards(playerCards, 'player-cards');
+}
+
 function endGame(result) {
     const message = document.getElementById('message');
     if (result === 'win') {
-        message.textContent = 'あなたの勝ち！+1000チップ';
-        userData.chips += 1000;
+        message.textContent = 'あなたの勝ち！+' + (currentBet * 2) + 'チップ';
+        userData.chips += currentBet * 2;
     } else if (result === 'lose') {
-        message.textContent = 'あなたの負け...-1000チップ';
-        userData.chips -= 1000;
+        message.textContent = 'あなたの負け...';
+        // チップは減っているので増減なし
     } else {
-        message.textContent = '引き分け！';
+        message.textContent = '引き分け！ベット額戻ります！';
+        userData.chips += currentBet;
     }
 
-    // 0チップ以下なら5000チップ配布
     if (userData.chips <= 0) {
         alert('チップがなくなったので5000チップ配布します！');
         userData.chips = 5000;
     }
 
-    // 保存して表示更新
     localStorage.setItem('user_' + currentUserId, JSON.stringify(userData));
     document.getElementById('chips').textContent = userData.chips;
 
     document.getElementById('restart-btn').style.display = 'block';
 }
 
-// ボタン処理
+// ベットボタン
+document.getElementById('bet-btn').addEventListener('click', function() {
+    const betInput = document.getElementById('bet-amount');
+    const bet = parseInt(betInput.value);
+
+    if (isNaN(bet) || bet <= 0) {
+        alert('正しいベット額を入力してください');
+        return;
+    }
+    if (bet > userData.chips) {
+        alert('持っているチップ以上は賭けられません');
+        return;
+    }
+
+    currentBet = bet;
+    userData.chips -= currentBet;
+    localStorage.setItem('user_' + currentUserId, JSON.stringify(userData));
+    document.getElementById('chips').textContent = userData.chips;
+
+    document.getElementById('bet-area').style.display = 'none';
+    document.getElementById('game-area').style.display = 'block';
+    startGame();
+});
+
+// ヒット
 document.getElementById('hit-btn').addEventListener('click', function() {
     playerCards.push(getRandomCard());
     updateHands();
@@ -71,6 +133,7 @@ document.getElementById('hit-btn').addEventListener('click', function() {
     }
 });
 
+// スタンド
 document.getElementById('stand-btn').addEventListener('click', function() {
     while (calculateTotal(dealerCards) < 17) {
         dealerCards.push(getRandomCard());
@@ -89,15 +152,8 @@ document.getElementById('stand-btn').addEventListener('click', function() {
     }
 });
 
+// もう一回
 document.getElementById('restart-btn').addEventListener('click', function() {
-    startGame();
-});
-
-document.getElementById('menu-btn').addEventListener('click', function() {
-    alert('メニューはあとで追加します！');
-});
-
-// 最初スタート
-startGame();
-<script src="js/menu.js"></script>
-
+    document.getElementById('bet-area').style.display = 'block';
+    document.getElementById('game-area').style.display = 'none';
+    document.getElementB

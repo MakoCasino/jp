@@ -35,3 +35,39 @@ h1 {
 .btn:hover {
     background: #45a049;
 }
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #333;
+    padding: 10px;
+    position: sticky;
+    top: 0;
+}
+
+#menu-btn {
+    background: #555;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#user-info {
+    font-size: 18px;
+}
+
+main {
+    padding: 20px;
+}
+
+#ranking {
+    margin-bottom: 30px;
+}
+
+#ranking-list li {
+    margin: 5px 0;
+}
+

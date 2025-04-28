@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ブラックジャック</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header>
+        <button id="menu-btn">≡ メニュー</button>
+        <div id="user-info">
+            <span id="nickname"></span>さん　
+            💰<span id="chips"></span>チップ
+        </div>
+    </header>
+
+    <main>
+        <h2>ブラックジャック</h2>
+
+        <div id="game-area">
+            <div id="dealer-hand">
+                <h3>ディーラー</h3>
+                <div id="dealer-cards"></div>
+            </div>
+
+            <div id="player-hand">
+                <h3>あなた</h3>
+                <div id="player-cards"></div>
+            </div>
+
+            <div id="controls">
+                <button id="hit-btn" class="btn">ヒット</button>
+                <button id="stand-btn" class="btn">スタンド</button>
+                <button id="restart-btn" class="btn" style="display:none;">もう一回！</button>
+            </div>
+
+            <div id="message"></div>
+        </div>
+    </main>
+
+    <script src="js/blackjack.js"></script>
+</body>
+</html>
